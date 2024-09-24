@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 /**
  * Spell Check
@@ -11,8 +13,6 @@ import java.util.Arrays;
  * */
 
 public class SpellCheck {
-
-
     /**
      * checkWords finds all words in text that are not present in dictionary
      *
@@ -21,27 +21,22 @@ public class SpellCheck {
      * @return String[] of all mispelled words in the order they appear in text. No duplicates.
      */
     public String[] checkWords(String[] text, String[] dictionary) {
-        // Parse dictionary into graph
-        SpellCheckNode node = SpellCheckNode.convertFromDictionary(dictionary);
+        // Create HashSet with dictionary words
+        HashSet<String> dictionarySet = new HashSet<>(Arrays.asList(dictionary));
 
-        // Store missing words
-        ArrayList<String> missingWords = new ArrayList<>();
+        // Keep track of invalid words
+        LinkedHashSet<String> missingWords = new LinkedHashSet<>();
 
-        // Loop through all words in text, checking if they are valid
+        // Loop through all words in text to find missing words
         for (String word : text) {
-            // Lowercase word
-            String lowercaseWord = word.toLowerCase();
-
-            // Check for validity
-            if (!node.isWord(lowercaseWord)) {
-                // Check if word is already in incorrectWords array
-                if (!missingWords.contains(lowercaseWord)) {
-                    missingWords.add(lowercaseWord);
-                }
+            // Check if dictionary contains word
+            if (!dictionarySet.contains(word)) {
+                // If it does not contain the word, add the word to the missingWords set
+                missingWords.add(word);
             }
         }
 
-        // Return missing words
+        // Return missing words as array
         String[] missingWordsArray = new String[missingWords.size()];
         return missingWords.toArray(missingWordsArray);
     }
