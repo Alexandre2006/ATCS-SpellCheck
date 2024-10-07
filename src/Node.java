@@ -12,47 +12,41 @@ public class Node {
 
     // Adds a word to the trie
     public void addWord(String word) {
-        Node currentNode = this;
+        // Get current character
+        char c = word.charAt(0);
+        c-=32;
 
-        // Loop over each letter
-        for (int i = 0; i < word.length(); i++) {
-            // Get the current character
-            char c = word.charAt(i);
-            c-=32;
-
-            // If the character is not in the trie, add it
-            if (currentNode.children[c] == null) {
-                currentNode.children[c] = new Node();
-            }
-
-            // Move to the next node
-            currentNode = currentNode.children[c];
+        // If the current character is not in the trie, add it
+        if (children[c] == null) {
+            children[c] = new Node();
         }
 
-        // Mark the end of the word
-        currentNode.isWord = true;
+        // If the word is only one character long, mark it as a word
+        if (word.length() == 1) {
+            children[c].isWord = true;
+        } else {
+            // Recursively add the rest of the word
+            children[c].addWord(word.substring(1));
+        }
     }
 
     // Looks for a word in the trie
     public boolean findWord(String word) {
-        Node currentNode = this;
+        // Get current character
+        char c = word.charAt(0);
+        c-=32;
 
-        // Loop over each letter
-        for (int i = 0; i < word.length(); i++) {
-            // Get the current character
-            char c = word.charAt(i);
-            c-=32;
-
-            // Exit early if current character is not in the trie
-            if (currentNode.children[c] == null) {
-                return false;
-            }
-
-            // Move to the next node
-            currentNode = currentNode.children[c];
+        // If the current character is not in the trie, the word is not in the trie
+        if (children[c] == null) {
+            return false;
         }
 
-        // Return whether the word is in the trie
-        return currentNode.isWord;
+        // If the word is only one character long, return whether the current character is a word
+        if (word.length() == 1) {
+            return children[c].isWord;
+        } else {
+            // Recursively search for the rest of the word
+            return children[c].findWord(word.substring(1));
+        }
     }
 }
