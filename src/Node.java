@@ -11,83 +11,89 @@ public class Node {
 
     // Adds a word to the trie
     public void addWord(String word) {
-        // Keep track of the current node
-        Node currentNode = this;
+        // Get first character of the word
+        char firstChar = word.charAt(0);
 
-        // Iterate through the word
-        for (int i = 0; i < word.length(); i++) {
-            // Get current character
-            char currentChar = word.charAt(i);
+        // Check if first character is current character
+        if (firstChar == character) {
+            // Check if this is the last character in the word
+            if (word.length() == 1) {
+                isWord = true;
+            } else {
+                // Otherwise, move to the next character
+                String nextWord = word.substring(1);
 
-            // Loop until next character is found, or if it is not found, where to add it
-            while (currentChar != currentNode.character) {
-                // If the next character is less than the current character, add it to the left
-                if (currentChar < currentNode.character) {
-                    if (currentNode.children[0] == null) {
-                        currentNode.children[0] = new Node(currentChar);
-                    }
-                    currentNode = currentNode.children[0];
+                // Check if the next character exists
+                if (children[1] == null) {
+                    children[1] = new Node(word.charAt(1));
                 }
-                // If the next character is greater than the current character, add it to the right
-                else {
-                    if (currentNode.children[2] == null) {
-                        currentNode.children[2] = new Node(currentChar);
-                    }
-                    currentNode = currentNode.children[2];
-                }
-            }
 
-            // When found, move down to middle child (if word is not finished)
-            if (i < word.length() - 1) {
-                if (currentNode.children[1] == null) {
-                    currentNode.children[1] = new Node(word.charAt(i + 1));
-                }
-                currentNode = currentNode.children[1];
+                // Add the next character
+                children[1].addWord(nextWord);
             }
         }
 
-        // Once the end of the word is reached, mark the node as a word
-        currentNode.isWord = true;
+        // If the first character is less than the current character
+        else if (firstChar < character) {
+            // Check if the left child exists
+            if (children[0] == null) {
+                children[0] = new Node(firstChar);
+            }
+
+            // Add the word to the left child
+            children[0].addWord(word);
+        } else {
+            // Check if the right child exists
+            if (children[2] == null) {
+                children[2] = new Node(firstChar);
+            }
+
+            // Add the word to the right child
+            children[2].addWord(word);
+        }
     }
 
     // Looks for a word in the trie
     public boolean findWord(String word) {
-        // Keep track of the current node
-        Node currentNode = this;
+        // Get first character of the word
+        char firstChar = word.charAt(0);
 
-        // Iterate through the word
-        for (int i = 0; i < word.length(); i++) {
-            // Get current character
-            char currentChar = word.charAt(i);
+        // Check if first character is current character
+        if (firstChar == character) {
+            // Check if this is the last character in the word
+            if (word.length() == 1) {
+                return isWord;
+            } else {
+                // Otherwise, move to the next character
+                String nextWord = word.substring(1);
 
-            // Loop until next character is found, or if it is not found, return false
-            while (currentChar != currentNode.character) {
-                // If the next character is less than the current character, return false
-                if (currentChar < currentNode.character) {
-                    if (currentNode.children[0] == null) {
-                        return false;
-                    }
-                    currentNode = currentNode.children[0];
-                }
-                // If the next character is greater than the current character, return false
-                else {
-                    if (currentNode.children[2] == null) {
-                        return false;
-                    }
-                    currentNode = currentNode.children[2];
-                }
-            }
-
-            // When found, move down to middle child (if word is not finished)
-            if (i < word.length() - 1) {
-                if (currentNode.children[1] == null) {
+                // Check if the next character exists
+                if (children[1] == null) {
                     return false;
                 }
-                currentNode = currentNode.children[1];
+
+                // Find the next character
+                return children[1].findWord(nextWord);
             }
         }
 
-        // Once the end of the word is reached, return if the node is a word
-        return currentNode.isWord;
+        // If the first character is less than the current character
+        else if (firstChar < character) {
+            // Check if the left child exists
+            if (children[0] == null) {
+                return false;
+            }
+
+            // Find the word in the left child
+            return children[0].findWord(word);
+        } else {
+            // Check if the right child exists
+            if (children[2] == null) {
+                return false;
+            }
+
+            // Find the word in the right child
+            return children[2].findWord(word);
+        }
     }
 }
