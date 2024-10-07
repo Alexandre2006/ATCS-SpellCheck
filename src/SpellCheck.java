@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
  * A puzzle written by Zach Blick
  * for Adventures in Algorithms
  * At Menlo School in Atherton, CA
- *
+ * <p>
  * Completed by: Alexandre Haddad-Delaveau
  * */
 
@@ -18,13 +18,13 @@ public class SpellCheck {
      *
      * @param text The list of all words in the text.
      * @param dictionary The list of all accepted words.
-     * @return String[] of all mispelled words in the order they appear in text. No duplicates.
+     * @return String[] of all misspelled words in the order they appear in text. No duplicates.
      */
     public String[] checkWords(String[] text, String[] dictionary) {
         // Create HashSet with dictionary words
         HashSet<String> dictionarySet = new HashSet<>(Arrays.asList(dictionary));
 
-        // Keep track of invalid words
+        // Keep track of invalid words with a LinkedHashSet (preserves order)
         LinkedHashSet<String> missingWords = new LinkedHashSet<>();
 
         // Loop through all words in text to find missing words
