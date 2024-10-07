@@ -1,8 +1,6 @@
 # Spell Check
 #### A puzzle created by Zach Blick for Adventures in Algorithms at Menlo School in Atherton, CA
 
-***Note:*** *This was my first "final" solution. Check other branches for other solutions.*
-
 ## Your goal
 Complete the function, checkWords(), to return a list of all mispelled words in a given text file.
 
