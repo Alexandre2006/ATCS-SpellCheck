@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 /**
@@ -21,22 +18,24 @@ public class SpellCheck {
      * @return String[] of all misspelled words in the order they appear in text. No duplicates.
      */
     public String[] checkWords(String[] text, String[] dictionary) {
-        // Create HashSet with dictionary words
-        HashSet<String> dictionarySet = new HashSet<>(Arrays.asList(dictionary));
-
-        // Keep track of invalid words with a LinkedHashSet (preserves order)
+        // Create root node
+        Node rootNode = new Node();
         LinkedHashSet<String> missingWords = new LinkedHashSet<>();
 
-        // Loop through all words in text to find missing words
+        // Add all dictionary words to trie
+        for (String word : dictionary) {
+            rootNode.addWord(word);
+        }
+
+        // Check each word in the text
         for (String word : text) {
-            // Check if dictionary contains word
-            if (!dictionarySet.contains(word)) {
-                // If it does not contain the word, add the word to the missingWords set
+            // If the word is not in the trie, add it to the missing words
+            if (!rootNode.findWord(word)) {
                 missingWords.add(word);
             }
         }
 
-        // Return missing words as array
+        // Convert missing words to array
         String[] missingWordsArray = new String[missingWords.size()];
         return missingWords.toArray(missingWordsArray);
     }

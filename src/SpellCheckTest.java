@@ -1,28 +1,15 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SpellCheckTest {
 
     private final SpellCheck studentSolution = new SpellCheck();
     private String[] allWords, textWords, badWords;
-
-    @Test
-    public void performanceTest() throws IOException {
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
-            testRome();
-        }
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("Took " + (endTime - startTime) + "ms!");
-    }
 
     @Test
     @Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
