@@ -1,52 +1,93 @@
 public class Node {
     boolean isWord;
-
-    // Extended ASCII includes 256 characters, but the first 32 are control characters (unused in words)
-    // Saves space by only using 224 characters - 13.5% less space
-    Node[] children = new Node[224];
+    char character;
+    Node[] children = new Node[3];
 
     // Constructor
-    public Node() {
+    public Node(char character) {
         isWord = false;
+        this.character = character;
     }
 
     // Adds a word to the trie
     public void addWord(String word) {
-        // Get current character
-        char c = word.charAt(0);
-        c-=32;
+        // Keep track of the current node
+        Node currentNode = this;
 
-        // If the current character is not in the trie, add it
-        if (children[c] == null) {
-            children[c] = new Node();
+        // Iterate through the word
+        for (int i = 0; i < word.length(); i++) {
+            // Get current character
+            char currentChar = word.charAt(i);
+
+            // Loop until next character is found, or if it is not found, where to add it
+            while (currentChar != currentNode.character) {
+                // If the next character is less than the current character, add it to the left
+                if (currentChar < currentNode.character) {
+                    if (currentNode.children[0] == null) {
+                        currentNode.children[0] = new Node(currentChar);
+                    }
+                    currentNode = currentNode.children[0];
+                }
+                // If the next character is greater than the current character, add it to the right
+                else {
+                    if (currentNode.children[2] == null) {
+                        currentNode.children[2] = new Node(currentChar);
+                    }
+                    currentNode = currentNode.children[2];
+                }
+            }
+
+            // When found, move down to middle child (if word is not finished)
+            if (i < word.length() - 1) {
+                if (currentNode.children[1] == null) {
+                    currentNode.children[1] = new Node(word.charAt(i + 1));
+                }
+                currentNode = currentNode.children[1];
+            }
         }
 
-        // If the word is only one character long, mark it as a word
-        if (word.length() == 1) {
-            children[c].isWord = true;
-        } else {
-            // Recursively add the rest of the word
-            children[c].addWord(word.substring(1));
-        }
+        // Once the end of the word is reached, mark the node as a word
+        currentNode.isWord = true;
     }
 
     // Looks for a word in the trie
     public boolean findWord(String word) {
-        // Get current character
-        char c = word.charAt(0);
-        c-=32;
+        // Keep track of the current node
+        Node currentNode = this;
 
-        // If the current character is not in the trie, the word is not in the trie
-        if (children[c] == null) {
-            return false;
+        // Iterate through the word
+        for (int i = 0; i < word.length(); i++) {
+            // Get current character
+            char currentChar = word.charAt(i);
+
+            // Loop until next character is found, or if it is not found, return false
+            while (currentChar != currentNode.character) {
+                // If the next character is less than the current character, return false
+                if (currentChar < currentNode.character) {
+                    if (currentNode.children[0] == null) {
+                        return false;
+                    }
+                    currentNode = currentNode.children[0];
+                }
+                // If the next character is greater than the current character, return false
+                else {
+                    if (currentNode.children[2] == null) {
+                        return false;
+                    }
+                    currentNode = currentNode.children[2];
+                }
+            }
+
+            // When found, move down to middle child (if word is not finished)
+            if (i < word.length() - 1) {
+                if (currentNode.children[1] == null) {
+                    return false;
+                }
+                currentNode = currentNode.children[1];
+            }
         }
 
-        // If the word is only one character long, return whether the current character is a word
-        if (word.length() == 1) {
-            return children[c].isWord;
-        } else {
-            // Recursively search for the rest of the word
-            return children[c].findWord(word.substring(1));
-        }
+        // Once the end of the word is reached, return if the node is a word
+        return currentNode.isWord;
     }
 }

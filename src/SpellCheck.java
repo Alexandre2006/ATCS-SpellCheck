@@ -19,7 +19,7 @@ public class SpellCheck {
      */
     public String[] checkWords(String[] text, String[] dictionary) {
         // Create root node
-        Node rootNode = new Node();
+        Node rootNode = new Node('M');
         LinkedHashSet<String> missingWords = new LinkedHashSet<>();
 
         // Add all dictionary words to trie
